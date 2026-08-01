@@ -47,6 +47,7 @@ let leftPressed = false;
 //Event listeners for keypresses
 document.addEventListener("keydown", keyDownHandler);
 document.addEventListener("keyup", keyUpHandler);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
 //variable to control if draw() continues to loop
 let interval = 0;
@@ -68,6 +69,13 @@ function keyUpHandler(e) {
         rightPressed = false;
     } else if (e.key === "Left" || e.key === "ArrowLeft") {
         leftPressed = false;
+    }
+}
+
+function mouseMoveHandler(e) {
+    const relativeX = e.clientX - canvas.offsetLeft;
+    if (relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth / 2;
     }
 }
 
