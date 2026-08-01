@@ -55,6 +55,9 @@ let interval = 0;
 //score variable
 let score = 0;
 
+//lives variable
+let lives = 1;
+
 //keypress functions
 function keyDownHandler(e) {
     if (e.key === "Right" || e.key === "ArrowRight") {
@@ -140,7 +143,6 @@ function collisionDetection() {
                     if (score === brickRowCount * brickColumnCount) {
                         alert("Vous avez gagné, félicitations !");
                         document.location.reload();
-                        clearInterval(interval);
                     }
                 }
             }
@@ -153,6 +155,12 @@ function drawScore() {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
     ctx.fillText("Score: " + score, 8, 20);
+}
+
+function drawLives() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText(`Vies: ${lives}`, canvas.width - 65, 20);
 }
 
 
@@ -173,6 +181,8 @@ function draw() {
 
     drawScore();
 
+    drawLives();
+
     collisionDetection();
 
     //change direction when ball hits the walls
@@ -188,9 +198,18 @@ function draw() {
             dy = -dy;
             toggleBallColor();
         } else {
-            alert("Perdu !");
-            document.location.reload();
-            clearInterval(interval); // necessary for Chrome to end the game
+            if (!lives) {
+                alert("Perdu !");
+                document.location.reload();
+            } else {
+                x = canvas.width / 2;
+                y = canvas.height - 30;
+                dx = 2;
+                dy = -2;
+                paddleX = (canvas.width - paddleWidth) / 2;
+                lives--;
+            }
+            
         }
     }
     if (x + dx < ballRadius || x + dx > canvas.width - ballRadius ) {
@@ -215,7 +234,9 @@ function draw() {
             paddleX = 0;
         }
     }
+
+    requestAnimationFrame(draw);
 }
 
-//call draw() every 20 ms
-interval = setInterval(draw, 10);
+//call draw()
+draw();
