@@ -30,6 +30,9 @@ let leftPressed = false;
 document.addEventListener("keydown", keyDownHandler);
 document.addEventListener("keyup", keyUpHandler);
 
+//variable to control if draw() continues to loop
+let interval = 0;
+
 //keypress functions
 function keyDownHandler(e) {
     if (e.key === "Right" || e.key === "ArrowRight") {
@@ -93,9 +96,19 @@ function draw() {
     //remember y is backwards (top to bottom)
     //ballRadius is used so that the collision is on the circumference
     //and not the center of the ball
-    if (y + dy < ballRadius || y + dy > canvas.height - ballRadius) {
+    if (y + dy < ballRadius) {
         dy = -dy;
         toggleBallColor();
+    } else if (y + dy > canvas.height - ballRadius) {
+        //check if hits paddle
+        if (x > paddleX && x < paddleX + paddleWidth) {
+            dy = -dy;
+            toggleBallColor();
+        } else {
+            alert("Perdu !");
+            document.location.reload();
+            clearInterval(interval); // necessary for Chrome to end the game
+        }
     }
     if (x + dx < ballRadius || x + dx > canvas.width - ballRadius ) {
         dx = -dx;
@@ -122,4 +135,4 @@ function draw() {
 }
 
 //call draw() every 20 ms
-setInterval(draw, 10);
+interval = setInterval(draw, 10);
