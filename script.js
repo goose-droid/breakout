@@ -8,16 +8,31 @@ let y = canvas.height - 30;
 
 //change in x and change in y
 //how much we want ball to move on every draw()
-var dx = -2;
-var dy = -1;
+var dx = 2;
+var dy = -2;
 
+//define radius of ball to help with calculations
+const ballRadius = 10;
+
+
+let ballColor = "#0095DD";
+
+//function to toggle ball color
+function toggleBallColor() {
+    if (ballColor === "#0095DD") {
+        ballColor= "#00dd4a";
+    } else {
+        ballColor = "#0095DD";
+    }
+}
+        
 //function to draw the ball
 function drawBall() {
     ctx.beginPath();
     //(position x, position y, radius, 
     // starting angle (radians), ending angle (radians))
-    ctx.arc(x, y, 10, 0, Math.PI * 2);
-    ctx.fillStyle = "#0095DD";
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = ballColor;
     ctx.fill();
     ctx.closePath();
 }
@@ -31,6 +46,19 @@ function draw() {
 
     //draw ball
     drawBall();
+
+    //change direction when ball hits the walls
+    //remember y is backwards (top to bottom)
+    //ballRadius is used so that the collision is on the circumference
+    //and not the center of the ball
+    if (y + dy < ballRadius || y + dy > canvas.height - ballRadius) {
+        dy = -dy;
+        toggleBallColor();
+    }
+    if (x + dx < ballRadius || x + dx > canvas.width - ballRadius ) {
+        dx = -dx;
+        toggleBallColor();
+    }
 
     //change ball position using dx and dy
     x += dx;
