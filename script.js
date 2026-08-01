@@ -22,6 +22,24 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 //define default/starting ball color
 let ballColor = "#0095DD";
 
+//brick definitions
+const brickRowCount = 3;
+const brickColumnCount = 5;
+const brickWidth = 75;
+const brickHeight = 20;
+const brickPadding = 10;
+const brickOffsetTop = 30;
+const brickOffsetLeft = 30;
+
+//create array of bricks
+const bricks = [];
+for (let c = 0; c < brickColumnCount; c++) {
+    bricks[c] = [];
+    for (let r = 0; r < brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0};
+    }
+}
+
 //variables to keep track of keyboard presses
 let rightPressed = false;
 let leftPressed = false;
@@ -79,12 +97,32 @@ function drawPaddle() {
     ctx.closePath();
 }
 
+//function to draw bricks
+function drawBricks() {
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+            const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+            const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+            bricks[c][r].x = brickX;
+            bricks[c][r].y = brickY;
+            ctx.beginPath();
+            ctx.rect(brickX, brickY, brickWidth, brickHeight);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+}
+
 
 //main function that will draw every 10 ms
 function draw() {
     //clear canvas
     //(coordinates of top left, coordinates of bottom right)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    //draw bricks
+    drawBricks();
 
     //draw ball
     drawBall();
