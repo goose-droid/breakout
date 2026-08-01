@@ -51,6 +51,9 @@ document.addEventListener("keyup", keyUpHandler);
 //variable to control if draw() continues to loop
 let interval = 0;
 
+//score variable
+let score = 0;
+
 //keypress functions
 function keyDownHandler(e) {
     if (e.key === "Right" || e.key === "ArrowRight") {
@@ -125,11 +128,23 @@ function collisionDetection() {
                 if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
                     dy = -dy;
                     b.status = 0;
+                    score++;
+                    if (score === brickRowCount * brickColumnCount) {
+                        alert("Vous avez gagné, félicitations !");
+                        document.location.reload();
+                        clearInterval(interval);
+                    }
                 }
             }
             
         }
     }
+}
+
+function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: " + score, 8, 20);
 }
 
 
@@ -147,6 +162,8 @@ function draw() {
 
     //draw paddle
     drawPaddle();
+
+    drawScore();
 
     collisionDetection();
 
